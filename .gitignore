@@ -361,3 +361,9 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/Escola/Migrations/20260217192348_MigracaoTurma.cs
+/Escola/Migrations/20260217192348_MigracaoTurma.Designer.cs
+/Escola/Migrations/20260217192802_Turma.cs
+/Escola/Migrations/20260217192802_Turma.Designer.cs
+/Escola/Migrations/20260217193609_ok.cs
+/Escola/Migrations/20260217193609_ok.Designer.cs
