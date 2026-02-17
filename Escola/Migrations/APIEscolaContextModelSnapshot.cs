@@ -21,6 +21,24 @@ namespace APIEscola.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("APIEscola.Domain.Curso", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Cursos");
+                });
+
             modelBuilder.Entity("APIEscola.Domain.Professor", b =>
                 {
                     b.Property<int>("Id")
@@ -34,9 +52,37 @@ namespace APIEscola.Migrations
                         .HasMaxLength(80)
                         .HasColumnType("nvarchar(80)");
 
+                    b.Property<int>("TurmaId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
+                    b.HasIndex("TurmaId");
+
                     b.ToTable("Professores");
+                });
+
+            modelBuilder.Entity("APIEscola.Domain.Turma", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CursoId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CursoId");
+
+                    b.ToTable("Turmas");
                 });
 
             modelBuilder.Entity("Escola.Domain.Aluno", b =>
@@ -52,9 +98,59 @@ namespace APIEscola.Migrations
                         .HasMaxLength(80)
                         .HasColumnType("nvarchar(80)");
 
+                    b.Property<int>("TurmaId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
+                    b.HasIndex("TurmaId");
+
                     b.ToTable("Alunos");
+                });
+
+            modelBuilder.Entity("APIEscola.Domain.Professor", b =>
+                {
+                    b.HasOne("APIEscola.Domain.Turma", "Turma")
+                        .WithMany("Professores")
+                        .HasForeignKey("TurmaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Turma");
+                });
+
+            modelBuilder.Entity("APIEscola.Domain.Turma", b =>
+                {
+                    b.HasOne("APIEscola.Domain.Curso", "Curso")
+                        .WithMany("Turmas")
+                        .HasForeignKey("CursoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Curso");
+                });
+
+            modelBuilder.Entity("Escola.Domain.Aluno", b =>
+                {
+                    b.HasOne("APIEscola.Domain.Turma", "Turma")
+                        .WithMany("Alunos")
+                        .HasForeignKey("TurmaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Turma");
+                });
+
+            modelBuilder.Entity("APIEscola.Domain.Curso", b =>
+                {
+                    b.Navigation("Turmas");
+                });
+
+            modelBuilder.Entity("APIEscola.Domain.Turma", b =>
+                {
+                    b.Navigation("Alunos");
+
+                    b.Navigation("Professores");
                 });
 #pragma warning restore 612, 618
         }

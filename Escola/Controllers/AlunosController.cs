@@ -1,9 +1,8 @@
 ﻿using APIEscola.Context;
 using Escola.Domain;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace APIEscola.Controllers;
 
@@ -23,7 +22,7 @@ public class AlunosController : ControllerBase
     {
         var alunos = _context.Alunos.ToList();
 
-        if (alunos == null)
+        if (alunos.IsNullOrEmpty())
         {
             return NotFound("Alunos não encontrados");
         }

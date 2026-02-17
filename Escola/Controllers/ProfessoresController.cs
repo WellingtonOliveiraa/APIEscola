@@ -1,8 +1,8 @@
 ﻿using APIEscola.Context;
 using APIEscola.Domain;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace APIEscola.Controllers;
 
@@ -22,7 +22,7 @@ public class ProfessoresController : ControllerBase
     {
         var professor = _context.Professores.ToList();
 
-        if(professor == null)
+        if(professor.IsNullOrEmpty())
         {
             return NotFound("Professores não encontrados");
         }
@@ -57,7 +57,7 @@ public class ProfessoresController : ControllerBase
         return new CreatedAtRouteResult("ObterProfessor", new { Id = professor.Id }, professor);
     }
 
-    [HttpPut]
+    [HttpPut("{Id:int}")]
     public ActionResult Put(int Id, Professor professor)
     {
         if (Id != professor.Id)

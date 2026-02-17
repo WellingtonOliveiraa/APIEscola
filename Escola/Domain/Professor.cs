@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace APIEscola.Domain;
 
@@ -9,4 +10,8 @@ public class Professor
     [Required]
     [StringLength(80)]
     public string? Nome { get; set; }
+    [Required]
+    public int TurmaId { get; set; }
+    [JsonIgnore]
+    public Turma? Turma { get; set; }
 }
