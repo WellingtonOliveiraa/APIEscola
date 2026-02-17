@@ -4,7 +4,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-string sqlServerConection = builder.Configuration.GetConnectionString("SqlServerConection");
+string sqlServerConection = builder.Configuration.GetConnectionString("conexao");
 
 builder.Services.AddDbContext<APIEscola.Context.APIEscolaContext>(options =>
     options.UseSqlServer(sqlServerConection));
