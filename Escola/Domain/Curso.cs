@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace APIEscola.Domain;
 
@@ -11,7 +12,8 @@ public class Curso
     [Key]
     public int Id { get; set; }
     [Required]
-    [StringLength(20)]
+    [StringLength(40)]
     public string? Nome { get; set; }
+    [JsonIgnore]
     public ICollection<Turma>? Turmas { get; set; }
 }
