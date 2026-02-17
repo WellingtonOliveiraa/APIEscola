@@ -1,4 +1,5 @@
-﻿using Escola.Domain;
+﻿using APIEscola.Domain;
+using Escola.Domain;
 using Microsoft.EntityFrameworkCore;
 
 namespace APIEscola.Context;
@@ -10,4 +11,5 @@ public class APIEscolaContext : DbContext
     }
 
     public DbSet<Aluno>? Alunos { get; set; }
+    public DbSet<Professor>? Professores { get; set; }
 }
