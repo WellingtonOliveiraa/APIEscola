@@ -20,70 +20,105 @@ public class TurmasController : ControllerBase
     [HttpGet]
     public ActionResult<IEnumerable<Turma>> Get()
     {
-        var turma = _context.Turmas.ToList();
-
-        if (turma.IsNullOrEmpty())
+        try
         {
-            return NotFound("Turmas não encontradas");
-        }
+            var turma = _context.Turmas.AsNoTracking().ToList();
 
-        return turma;
+            if (turma.IsNullOrEmpty())
+            {
+                return NotFound("Turmas não encontradas");
+            }
+
+            return turma;
+        }
+        catch (Exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, "Houve um erro ao processar sua requisição.");
+        }
     }
 
     [HttpGet("{Id:int}", Name = "ObterTurma")]
     public ActionResult<Turma> GetId(int Id)
     {
-        var turma = _context.Turmas.FirstOrDefault(t => t.Id == Id);
-
-        if (turma == null)
+        try
         {
-            return NotFound("Turma não encontrada");
-        }
+            var turma = _context.Turmas.FirstOrDefault(t => t.Id == Id);
 
-        return turma;
+            if (turma == null)
+            {
+                return NotFound("Turma não encontrada");
+            }
+
+            return turma;
+        }
+        catch (Exception) 
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, "Houve um erro ao processar sua requisição.");
+        }
     }
 
     [HttpPost]
     public ActionResult Post(Turma turma)
     {
-        if (turma == null)
+        try
         {
-            return BadRequest("Dados inválidos");
+            if (turma == null)
+            {
+                return BadRequest("Dados inválidos");
+            }
+
+            _context.Turmas.Add(turma);
+            _context.SaveChanges();
+
+            return new CreatedAtRouteResult("ObterTurma", new { Id = turma.Id }, turma);
         }
-
-        _context.Turmas.Add(turma);
-        _context.SaveChanges();
-
-        return new CreatedAtRouteResult("ObterTurma", new { Id = turma.Id }, turma);
+        catch (Exception) 
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, "Houve um erro ao processar sua requisição.");
+        }
     }
 
     [HttpPut("{Id:int}")]
     public ActionResult Put(int Id, Turma turma)
     {
-        if (Id != turma.Id)
+        try
         {
-            return BadRequest("Id do Body diferente do Id da URI");
+            if (Id != turma.Id)
+            {
+                return BadRequest("Id do Body diferente do Id da URI");
+            }
+
+            _context.Turmas.Entry(turma).State = EntityState.Modified;
+            _context.SaveChanges();
+
+            return Ok(turma);
         }
-
-        _context.Turmas.Entry(turma).State = EntityState.Modified;
-        _context.SaveChanges();
-
-        return Ok(turma);
+        catch (Exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, "Houve um erro ao processar sua requisição.");
+        }
     }
 
     [HttpDelete("{Id:int}")]
     public ActionResult Delete(int Id)
     {
-        var turma = _context.Turmas.FirstOrDefault(t => t.Id == Id);
-
-        if (turma == null)
+        try
         {
-            return BadRequest("Turma não encontrada");
+            var turma = _context.Turmas.FirstOrDefault(t => t.Id == Id);
+
+            if (turma == null)
+            {
+                return BadRequest("Turma não encontrada");
+            }
+
+            _context.Turmas.Remove(turma);
+            _context.SaveChanges();
+
+            return Ok(turma);
         }
-
-        _context.Turmas.Remove(turma);
-        _context.SaveChanges();
-
-        return Ok(turma);
+        catch (Exception) 
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, "Houve um erro ao processar sua requisição.");
+        }
     }
 }

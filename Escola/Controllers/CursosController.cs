@@ -20,69 +20,104 @@ public class CursosController : ControllerBase
     [HttpGet]
     public ActionResult<IEnumerable<Curso>> Get()
     {
-        var cursos = _context.Cursos.ToList();
-
-        if (cursos.IsNullOrEmpty())
+        try
         {
-            return NotFound("Cursos não encontrados");
+            var cursos = _context.Cursos.AsNoTracking().ToList();
+
+            if (cursos.IsNullOrEmpty())
+            {
+                return NotFound("Cursos não encontrados");
+            }
+
+            return cursos;
         }
-        
-        return cursos;
+        catch (Exception) 
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, "Houve um erro ao processar sua requisição.");
+        }
     }
 
     [HttpGet("{Id}", Name = "ObterCurso")]
     public ActionResult<Curso> GetId(int Id)
     {
-        var curso = _context.Cursos.FirstOrDefault(c => c.Id == Id);
-
-        if (curso == null)
+        try
         {
-            return NotFound("Curso não encontrado");
+            var curso = _context.Cursos.FirstOrDefault(c => c.Id == Id);
+
+            if (curso == null)
+            {
+                return NotFound("Curso não encontrado");
+            }
+
+            return curso;
         }
-        
-        return curso;
+        catch (Exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, "Houve um erro ao processar sua requisição.");
+        }
     }
 
     [HttpPost]
     public ActionResult Post(Curso curso)
     {
-        if(curso == null)
+        try
         {
-            return BadRequest("Dados inválidos");
-        }
-        _context.Cursos.Add(curso);
-        _context.SaveChanges();
+            if (curso == null)
+            {
+                return BadRequest("Dados inválidos");
+            }
+            _context.Cursos.Add(curso);
+            _context.SaveChanges();
 
-        return new CreatedAtRouteResult("ObterCurso", new { Id = curso.Id }, curso);
+            return new CreatedAtRouteResult("ObterCurso", new { Id = curso.Id }, curso);
+        }
+        catch (Exception) 
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, "Houve um erro ao processar sua requisição.");
+        }
     }
 
      [HttpPut("{Id}")]
      public ActionResult Put(int Id, Curso curso)
      {
-        if(Id != curso.Id)
+        try
         {
-            return BadRequest("Id do Body diferente do Id da URI");
-        }
+            if (Id != curso.Id)
+            {
+                return BadRequest("Id do Body diferente do Id da URI");
+            }
 
-        _context.Entry(curso).State = EntityState.Modified;
-        _context.SaveChanges();
-        
-        return Ok(curso);
-    }
+            _context.Entry(curso).State = EntityState.Modified;
+            _context.SaveChanges();
+
+            return Ok(curso);
+        }
+        catch (Exception) 
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, "Houve um erro ao processar sua requisição.");
+        }
+     }
 
     [HttpDelete("{Id}")]
     public ActionResult Delete(int Id)
     {
-        var curso = _context.Cursos.FirstOrDefault(c => c.Id == Id);
-
-        if (curso == null)
+        try
         {
-            return NotFound("Curso não encontrado");
+            var curso = _context.Cursos.FirstOrDefault(c => c.Id == Id);
+
+            if (curso == null)
+            {
+                return NotFound("Curso não encontrado");
+            }
+
+            _context.Cursos.Remove(curso);
+            _context.SaveChanges();
+
+            return Ok(curso);
         }
-
-        _context.Cursos.Remove(curso);
-        _context.SaveChanges();
-
-        return Ok(curso);
+        catch (Exception) 
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, "Houve um erro ao processar sua requisição.");
+        }
     }
 }

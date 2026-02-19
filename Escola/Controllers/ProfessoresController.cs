@@ -20,70 +20,105 @@ public class ProfessoresController : ControllerBase
      [HttpGet]
      public ActionResult<IEnumerable<Professor>> Get()
     {
-        var professor = _context.Professores.ToList();
-
-        if(professor.IsNullOrEmpty())
+        try
         {
-            return NotFound("Professores não encontrados");
-        }
+            var professor = _context.Professores.AsNoTracking().ToList();
 
-        return professor;
+            if (professor.IsNullOrEmpty())
+            {
+                return NotFound("Professores não encontrados");
+            }
+
+            return professor;
+        }
+        catch (Exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, "Houve um erro ao processar sua requisição.");
+        }
     }
 
     [HttpGet("{Id:int}", Name = "ObterProfessor")]
     public ActionResult<Professor> GetId(int Id)
     {
-        var professor = _context.Professores.FirstOrDefault(p => p.Id == Id);
-
-        if(professor == null)
+        try
         {
-            return NotFound("Professor não encontrado");
-        }
+            var professor = _context.Professores.FirstOrDefault(p => p.Id == Id);
 
-        return professor;
+            if (professor == null)
+            {
+                return NotFound("Professor não encontrado");
+            }
+
+            return professor;
+        }
+        catch (Exception) 
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, "Houve um erro ao processar sua requisição.");
+        }
     }
 
     [HttpPost]
     public ActionResult Post(Professor professor) 
-    { 
-        if(professor == null)
+    {
+        try
         {
-            return BadRequest("Dados inválidos");
+            if (professor == null)
+            {
+                return BadRequest("Dados inválidos");
+            }
+
+            _context.Professores.Add(professor);
+            _context.SaveChanges();
+
+            return new CreatedAtRouteResult("ObterProfessor", new { Id = professor.Id }, professor);
         }
-
-        _context.Professores.Add(professor);
-        _context.SaveChanges();
-
-        return new CreatedAtRouteResult("ObterProfessor", new { Id = professor.Id }, professor);
+        catch (Exception) 
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, "Houve um erro ao processar sua requisição.");
+        }
     }
 
     [HttpPut("{Id:int}")]
     public ActionResult Put(int Id, Professor professor)
     {
-        if (Id != professor.Id)
+        try
         {
-            return BadRequest("Id do Body diferente do Id da URI");
+            if (Id != professor.Id)
+            {
+                return BadRequest("Id do Body diferente do Id da URI");
+            }
+
+            _context.Professores.Entry(professor).State = EntityState.Modified;
+            _context.SaveChanges();
+
+            return Ok(professor);
         }
-
-        _context.Professores.Entry(professor).State = EntityState.Modified;
-        _context.SaveChanges();
-
-        return Ok(professor);
+        catch (Exception) 
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, "Houve um erro ao processar sua requisição.");
+        }
     }
 
     [HttpDelete("{Id:int}")]
     public ActionResult Delete(int Id) 
     {
-        var professor = _context.Professores.FirstOrDefault(p => p.Id == Id);
-
-        if(professor == null)
+        try
         {
-            return BadRequest("Professor não encontrado");
+            var professor = _context.Professores.FirstOrDefault(p => p.Id == Id);
+
+            if (professor == null)
+            {
+                return BadRequest("Professor não encontrado");
+            }
+
+            _context.Professores.Remove(professor);
+            _context.SaveChanges();
+
+            return Ok(professor);
         }
-
-        _context.Professores.Remove(professor);
-        _context.SaveChanges();
-
-        return Ok(professor);
+        catch (Exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, "Houve um erro ao processar sua requisição.");
+        }
     }
 }
