@@ -14,11 +14,14 @@ public class Turma
 
     [Key]
     public int Id { get; set; }
-    [Required]
+
+    [Required(ErrorMessage = "Nome da turma é obrigatório")]
     [StringLength(20)]
     public string? Nome { get; set; }
-    [Required]
+
+    [Required(ErrorMessage = "Código do curso é obrigatório")]
     public int CursoId { get; set; }
+
     [JsonIgnore]
     public Curso? Curso { get; set; }
     public ICollection<Aluno>? Alunos { get; set; }

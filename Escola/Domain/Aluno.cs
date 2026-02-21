@@ -8,11 +8,14 @@ public class Aluno
 {
     [Key]
     public int Id { get; set; }
-    [Required]
+
+    [Required(ErrorMessage = "Nome do aluno é obrigatório")]
     [StringLength(80)]
     public string? Nome { get; set; }
-    [Required]
+
+    [Required(ErrorMessage = "Código da turma é obrigatório")]
     public int TurmaId { get; set; }
+
     [JsonIgnore]
     public Turma? Turma { get; set; }
 }

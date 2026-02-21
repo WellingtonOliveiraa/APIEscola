@@ -9,11 +9,14 @@ public class Curso
     {
         Turmas = new List<Turma>();
     }
+
     [Key]
     public int Id { get; set; }
-    [Required]
+
+    [Required(ErrorMessage = "Nome do curso é obrigatório")]
     [StringLength(40)]
     public string? Nome { get; set; }
+
     [JsonIgnore]
     public ICollection<Turma>? Turmas { get; set; }
 }

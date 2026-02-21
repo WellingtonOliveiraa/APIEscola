@@ -18,11 +18,11 @@ public class TurmasController : ControllerBase
     }
 
     [HttpGet]
-    public ActionResult<IEnumerable<Turma>> Get()
+    public async Task<ActionResult<IEnumerable<Turma>>> GetAsync()
     {
         try
         {
-            var turma = _context.Turmas.AsNoTracking().ToList();
+            var turma = await _context.Turmas.AsNoTracking().ToListAsync();
 
             if (turma.IsNullOrEmpty())
             {

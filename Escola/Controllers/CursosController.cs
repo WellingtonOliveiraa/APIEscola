@@ -18,11 +18,11 @@ public class CursosController : ControllerBase
     }
 
     [HttpGet]
-    public ActionResult<IEnumerable<Curso>> Get()
+    public async Task<ActionResult<IEnumerable<Curso>>> GetAsync()
     {
         try
         {
-            var cursos = _context.Cursos.AsNoTracking().ToList();
+            var cursos = await _context.Cursos.AsNoTracking().ToListAsync();
 
             if (cursos.IsNullOrEmpty())
             {
