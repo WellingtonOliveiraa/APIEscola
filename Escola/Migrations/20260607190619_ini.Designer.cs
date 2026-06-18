@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace APIEscola.Migrations
 {
     [DbContext(typeof(APIEscolaContext))]
-    [Migration("20260603162514_ini")]
+    [Migration("20260607190619_ini")]
     partial class ini
     {
         /// <inheritdoc />
